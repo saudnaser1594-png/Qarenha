@@ -1,5 +1,7 @@
 from fastapi import FastAPI, Query
-from typing import Optional
+
+from app.connectors.amazon import search_amazon
+
 
 app = FastAPI(
     title="Qarenha API",
@@ -21,32 +23,9 @@ def search_products(
 ):
     query = q.strip()
 
+    amazon_results = search_amazon(query)
+
     return {
         "query": query,
-        "results": [
-            {
-                "store": "Amazon.sa",
-                "title": f"{query} - Amazon.sa",
-                "price": None,
-                "currency": "SAR",
-                "url": "https://www.amazon.sa/",
-                "in_stock": None,
-            },
-            {
-                "store": "Noon Saudi",
-                "title": f"{query} - Noon",
-                "price": None,
-                "currency": "SAR",
-                "url": "https://www.noon.com/saudi-ar/",
-                "in_stock": None,
-            },
-            {
-                "store": "SHEIN",
-                "title": f"{query} - SHEIN",
-                "price": None,
-                "currency": "SAR",
-                "url": "https://m.shein.com/ar/",
-                "in_stock": None,
-            },
-        ],
+        "results": amazon_results,
     }
