@@ -74,3 +74,25 @@ CREATE INDEX idx_product_variants_sku
 
 CREATE INDEX idx_product_variants_attributes
     ON product_variants USING GIN(attributes);
+
+CREATE TABLE sellers (
+    id BIGSERIAL PRIMARY KEY,
+    store_id BIGINT NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    external_seller_id VARCHAR(255),
+    seller_url TEXT,
+    rating NUMERIC(3,2),
+    review_count INTEGER,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT unique_store_seller
+        UNIQUE (store_id, external_seller_id)
+);
+
+CREATE INDEX idx_sellers_store
+    ON sellers(store_id);
+
+CREATE INDEX idx_sellers_external_id
+    ON sellers(external_seller_id);
