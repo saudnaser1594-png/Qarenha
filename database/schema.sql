@@ -50,3 +50,27 @@ CREATE INDEX idx_products_model_number
 
 CREATE INDEX idx_products_sku
     ON products(sku);
+
+CREATE TABLE product_variants (
+    id BIGSERIAL PRIMARY KEY,
+    product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    sku VARCHAR(150),
+    variant_name VARCHAR(255),
+    color VARCHAR(100),
+    size VARCHAR(100),
+    storage VARCHAR(100),
+    ram VARCHAR(100),
+    processor VARCHAR(150),
+    attributes JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_product_variants_product
+    ON product_variants(product_id);
+
+CREATE INDEX idx_product_variants_sku
+    ON product_variants(sku);
+
+CREATE INDEX idx_product_variants_attributes
+    ON product_variants USING GIN(attributes);
