@@ -96,3 +96,39 @@ CREATE INDEX idx_sellers_store
 
 CREATE INDEX idx_sellers_external_id
     ON sellers(external_seller_id);
+
+CREATE TABLE offers (
+    id BIGSERIAL PRIMARY KEY,
+    variant_id BIGINT NOT NULL REFERENCES product_variants(id) ON DELETE CASCADE,
+    store_id BIGINT NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
+    seller_id BIGINT REFERENCES sellers(id) ON DELETE SET NULL,
+
+    external_product_id VARCHAR(255),
+    external_offer_id VARCHAR(255),
+    external_url TEXT NOT NULL,
+
+    price NUMERIC(12,2),
+    shipping_fee NUMERIC(12,2) DEFAULT 0,
+    currency VARCHAR(3) NOT NULL DEFAULT 'SAR',
+
+    in_stock BOOLEAN,
+    availability_text VARCHAR(255),
+
+    last_updated TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_offers_variant
+    ON offers(variant_id);
+
+CREATE INDEX idx_offers_store
+    ON offers(store_id);
+
+CREATE INDEX idx_offers_seller
+    ON offers(seller_id);
+
+CREATE INDEX idx_offers_price
+    ON offers(price);
+
+CREATE INDEX idx_offers_last_updated
+    ON offers(last_updated);
