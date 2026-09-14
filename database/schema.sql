@@ -18,3 +18,35 @@ CREATE TABLE categories (
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE products (
+    id BIGSERIAL PRIMARY KEY,
+    category_id BIGINT REFERENCES categories(id) ON DELETE SET NULL,
+    name TEXT NOT NULL,
+    brand VARCHAR(150),
+    model VARCHAR(150),
+    model_number VARCHAR(150),
+    barcode VARCHAR(100),
+    sku VARCHAR(150),
+    description TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_products_category
+    ON products(category_id);
+
+CREATE INDEX idx_products_brand
+    ON products(brand);
+
+CREATE INDEX idx_products_model
+    ON products(model);
+
+CREATE INDEX idx_products_barcode
+    ON products(barcode);
+
+CREATE INDEX idx_products_model_number
+    ON products(model_number);
+
+CREATE INDEX idx_products_sku
+    ON products(sku);
